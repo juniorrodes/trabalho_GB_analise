@@ -4,6 +4,7 @@
 #include <string.h>
 #include <time.h>
 #include <limits.h>
+#include <time.h>
 
 #define MAX(a, b) a < b ? b : a
 #define MIN(a, b) a > b ? b : a
@@ -20,7 +21,6 @@ typedef struct {
 
 Game parseGame(FILE* file);
 void destroyGame(Game* game);
-void calculateMax(Game game, int* max_top, int* max_bottom, int swap_index);
 int isPossibleCombination(Game game, int exclude_index, Plate** excluded_plate);
 
 int main(int argc, char** argv) {
@@ -42,13 +42,16 @@ int main(int argc, char** argv) {
     }
     
     Game game = parseGame(input_file);
+    int game_number = 1;
     while (game.number_of_plates != 0) {
-        printf("a %d\n", game.number_of_plates);
         int max_sum = INT_MIN;
         Plate* excluded_plate = NULL;
+        time_t t = clock();
         for (int i = -1; i < game.number_of_plates; i++) {
             max_sum = MAX(isPossibleCombination(game, i, &excluded_plate), max_sum);
         }
+        t = clock() - t;
+        printf("game %d resolved in: %.2f\n", game_number++, (((double)t)/CLOCKS_PER_SEC) * 1000);
         if (max_sum == INT_MIN) {
             printf("Impossível\n");
         } else {
@@ -87,18 +90,17 @@ char readLine(FILE* file, char* buffer) {
 }
 
 Plate parsePlate(char* line) {
-    
     char number_string[5] = {0};
     Plate plate = {0};
     int i = 0;
-    for(; line[i] != ' '; i++) {
+    for(; line[i] >= '0' && line[i] <= '9'; i++) {
         number_string[i] = line[i];
     }
     int space_index = i;
     i += 1;
     number_string[i] = '\0';
     plate.top = atoi(number_string);
-    for(; line[i] != '\0'; i++) {
+    for(; line[i] >= '0' && line[i] <= '9'; i++) {
         number_string[i - space_index - 1] = line[i];
     }
     number_string[i - space_index - 1] = '\0';
@@ -126,18 +128,6 @@ Game parseGame(FILE* file) {
 
 void destroyGame(Game* game) {
     free(game->plates);
-}
-
-void calculateMax(Game game, int* sum_top, int* sum_bottom, int swap_index) {
-    *sum_top = *sum_bottom = 0;
-    for (int i = 0; i < game.number_of_plates; i++) {
-        if (swap_index != -1 && swap_index == i) {
-            *sum_bottom += game.plates[i].top;
-            *sum_top += game.plates[i].bottom;
-        }
-        *sum_bottom += game.plates[i].bottom;
-        *sum_top += game.plates[i].top;
-    }
 }
 
 int isPossibleCombination(Game game, int exclude_index, Plate** excluded_plate) {
