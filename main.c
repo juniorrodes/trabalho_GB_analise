@@ -43,10 +43,7 @@ int main(int argc, char** argv) {
     
     Game game = parseGame(input_file);
     while (game.number_of_plates != 0) {
-        printf("number of plates: %d\n", game.number_of_plates);
-        for(int i = 0; i < game.number_of_plates; i++) {
-            printf("plate %d: [%d %d]\n", i + 1, game.plates[i].top, game.plates[i].bottom);
-        }
+        printf("a %d\n", game.number_of_plates);
         int max_sum = INT_MIN;
         Plate* excluded_plate = NULL;
         for (int i = -1; i < game.number_of_plates; i++) {
@@ -90,6 +87,7 @@ char readLine(FILE* file, char* buffer) {
 }
 
 Plate parsePlate(char* line) {
+    
     char number_string[5] = {0};
     Plate plate = {0};
     int i = 0;
@@ -144,7 +142,7 @@ void calculateMax(Game game, int* sum_top, int* sum_bottom, int swap_index) {
 
 int isPossibleCombination(Game game, int exclude_index, Plate** excluded_plate) {
     int max_sum = INT_MIN;
-    for (int i = 1; i < (1 << game.number_of_plates); i = i << 1) {
+    for (int i = 1; i < (1 << game.number_of_plates); i++) {
         if (i & (1 << exclude_index)) continue;
 
         int current_top_sum = 0, current_bottom_sum = 0;
@@ -163,7 +161,9 @@ int isPossibleCombination(Game game, int exclude_index, Plate** excluded_plate) 
         if (current_bottom_sum == current_top_sum && max_sum < (MAX(current_top_sum, max_sum))) {
             if (exclude_index > -1) {
                 *excluded_plate = &game.plates[exclude_index];
-            } 
+            } else {
+                *excluded_plate = NULL;
+            }
             max_sum = MAX(current_top_sum, max_sum);
         }
     }
