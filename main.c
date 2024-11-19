@@ -1,3 +1,43 @@
+/*
+ * Trabalho de Grau B - Análise e Projeto de Algoritmos
+ * 
+ * Título: Organização de Placas com Somas Iguais
+ * 
+ * Descrição:
+ * Este programa resolve o problema de organização de placas, garantindo que
+ * as somas das partes superior e inferior sejam iguais. Caso não seja possível,
+ * o programa descarta uma placa, seguindo critérios específicos, e busca a maior
+ * soma possível.
+ * 
+ * Entrada:
+ * - Um número inteiro N indicando o número de placas (0 ≤ N ≤ 400).
+ * - Para cada placa, dois inteiros Xi e Yi representando as partes superior e
+ *   inferior da placa (0 ≤ Xi, Yi ≤ 1000).
+ * - O valor N = 0 indica o fim da entrada.
+ * 
+ * Saída:
+ * - A maior soma possível e a placa descartada, ou "impossível" caso não seja possível.
+ * 
+ * Exemplo de Entrada:
+ * 4
+ * 1 4
+ * 2 9
+ * 2 1
+ * 0 4
+ * 0
+ * 
+ * Exemplo de Saída:
+ * 10 descartada a placa 1 2
+ * 
+ * Autores:
+ * - José Luís Rodes Maciel Júnior
+ * - Fabiola F. Seghetto
+ * 
+ * Instituição: Universidade do Vale dos Sinos(UNISINOS)
+ * Disciplina: Análise e Projeto de Algoritmos
+ * Professora: Andriele Busatto do Carmo
+ * Data: 18/11/2024
+ */
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -51,7 +91,7 @@ int main(int argc, char** argv) {
             max_sum = MAX(isPossibleCombination(game, i, &excluded_plate), max_sum);
         }
         t = clock() - t;
-        printf("game %d resolved in: %.2f\n", game_number++, (((double)t)/CLOCKS_PER_SEC) * 1000);
+        printf("game %d resolved in: %.4f\n", game_number++, (((double)t)/CLOCKS_PER_SEC) * 1000);
         if (max_sum == INT_MIN) {
             printf("Impossível\n");
         } else {
